@@ -1,0 +1,52 @@
+import pandas as pd
+import numpy as np
+from datetime import datetime
+import time
+
+# Function to get real-time sensor data from the testbed
+def get_sensor_data(node_id):
+    # Replace this function with actual code to collect data from the sensor node
+    # This could involve querying a database, an API call, or reading directly from hardware
+    # For demonstration, we return a dictionary of random values
+    return {
+        'Packet_Rate': np.random.normal(50, 10),
+        'Packet_Drop_Rate': np.random.normal(2, 0.5),
+        # Add all the other attributes here
+        'Is_Malicious': np.random.choice([0, 1], p=[0.95, 0.05])
+    }
+
+# Initialize an empty DataFrame to store the data
+columns = ['Node_ID', 'Timestamp', 'IP_Address', 'Packet_Rate', 'Packet_Drop_Rate', # ... add other columns
+           'Is_Malicious']
+df = pd.DataFrame(columns=columns)
+
+# Number of samples (e.g., number of sensor nodes)
+n_samples = 10000
+
+for i in range(1, n_samples + 1):
+    # Get current timestamp
+    current_timestamp = datetime.now().strftime('%d-%m-%y %H:%M:%S')
+    
+    # Get IP address (you should replace this with the actual IP address of the sensor node)
+    ip_address = f"192.168.{np.random.randint(0, 255)}.{np.random.randint(0, 255)}"
+    
+    # Get real-time data from sensor node with ID=i
+    sensor_data = get_sensor_data(i)
+    
+    # Append to DataFrame
+    df = df.append({
+        'Node_ID': i,
+        'Timestamp': current_timestamp,
+        'IP_Address': ip_address,
+        'Packet_Rate': sensor_data['Packet_Rate'],
+        'Packet_Drop_Rate': sensor_data['Packet_Drop_Rate'],
+        # ... add other attributes here
+        'Is_Malicious': sensor_data['Is_Malicious']
+    }, ignore_index=True)
+    
+    # Simulate a delay between each data collection (optional)
+    time.sleep(0.1)  # 100ms delay
+
+# Save to CSV
+csv_path = 'RealTime_SensorNetGuard_A_Dataset_for_Identifying_Malicious_Sensor_Nodes.csv'
+df.to_csv(csv_path, index=False)
